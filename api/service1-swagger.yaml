@@ -1,0 +1,107 @@
+openapi: 3.0.0
+servers:
+    - {}
+paths:
+    /v1/service1/get:
+        post:
+            tags:
+                - Service1
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - id
+                                - jsonrpc
+                            properties:
+                                id:
+                                    example: 1
+                                    oneOf:
+                                        - type: number
+                                        - type: string
+                                          format: uuid
+                                jsonrpc:
+                                    type: string
+                                    example: "2.0"
+                                params:
+                                    $ref: '#/components/schemas/requestService1Get'
+            responses:
+                "200":
+                    description: Successful operation
+                    content:
+                        application/json:
+                            schema:
+                                oneOf:
+                                    - type: object
+                                      required:
+                                        - id
+                                        - jsonrpc
+                                      properties:
+                                        id:
+                                            example: 1
+                                            oneOf:
+                                                - type: number
+                                                - type: string
+                                                  format: uuid
+                                        jsonrpc:
+                                            type: string
+                                            example: "2.0"
+                                        result:
+                                            $ref: '#/components/schemas/responseService1Get'
+                                    - type: object
+                                      required:
+                                        - id
+                                        - jsonrpc
+                                        - error
+                                      properties:
+                                        error:
+                                            type: object
+                                            properties:
+                                                code:
+                                                    type: number
+                                                    format: int32
+                                                    example: -32603
+                                                data:
+                                                    type: object
+                                                    nullable: true
+                                                message:
+                                                    type: string
+                                                    example: not found
+                                        id:
+                                            example: 1
+                                            oneOf:
+                                                - type: number
+                                                - type: string
+                                                  format: uuid
+                                        jsonrpc:
+                                            type: string
+                                            example: "2.0"
+components:
+    schemas:
+        requestService1Get:
+            type: object
+            required:
+                - req
+            properties:
+                req:
+                    $ref: '#/components/schemas/types.BaseRequest'
+        responseService1Get:
+            type: object
+            required:
+                - resp
+            properties:
+                resp:
+                    oneOf:
+                        - $ref: '#/components/schemas/types.BaseResponse'
+                        - nullable: true
+        types.BaseRequest:
+            type: object
+            properties:
+                A:
+                    type: string
+        types.BaseResponse:
+            type: object
+            properties:
+                payload:
+                    type: string
